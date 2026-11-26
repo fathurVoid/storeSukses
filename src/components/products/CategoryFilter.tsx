@@ -10,14 +10,14 @@ interface CategoryFilterProps {
 export function CategoryFilter({ categories, value, onChange, disabled }: CategoryFilterProps) {
   return (
     <div className="filter-field">
-      <label htmlFor="category-filter">Category</label>
+      <label htmlFor="category-filter">Kategori</label>
       <select
         id="category-filter"
         value={value}
         onChange={(event) => onChange(event.target.value)}
         disabled={disabled}
       >
-        <option value="">All categories</option>
+        <option value="">Semua kategori</option>
         {categories.map((category) => (
           <option key={category.slug} value={category.slug}>
             {category.name}

@@ -43,30 +43,30 @@ export function validateProductForm(values: ProductFormValues): ProductFormError
   const description = values.description.trim();
   const price = Number(values.price);
 
-  if (!title) errors.title = 'Title is required.';
-  else if (title.length < 3) errors.title = 'Use at least 3 characters.';
-  else if (title.length > 80) errors.title = 'Use at most 80 characters.';
+  if (!title) errors.title = 'Nama produk wajib diisi.';
+  else if (title.length < 3) errors.title = 'Gunakan minimal 3 karakter.';
+  else if (title.length > 80) errors.title = 'Gunakan maksimal 80 karakter.';
 
-  if (!values.price.trim()) errors.price = 'Price is required.';
-  else if (!Number.isFinite(price) || price <= 0) errors.price = 'Enter a price greater than 0.';
+  if (!values.price.trim()) errors.price = 'Harga wajib diisi.';
+  else if (!Number.isFinite(price) || price <= 0) errors.price = 'Masukkan harga lebih besar dari 0.';
   else if (!/^\d+(\.\d{1,2})?$/.test(values.price.trim()))
-    errors.price = 'Use at most 2 decimal places.';
+    errors.price = 'Gunakan maksimal 2 angka desimal.';
 
-  if (!category) errors.category = 'Category is required.';
-  else if (category.length > 40) errors.category = 'Use at most 40 characters.';
+  if (!category) errors.category = 'Kategori wajib diisi.';
+  else if (category.length > 40) errors.category = 'Gunakan maksimal 40 karakter.';
 
-  if (!description) errors.description = 'Description is required.';
-  else if (description.length < 10) errors.description = 'Use at least 10 characters.';
-  else if (description.length > 500) errors.description = 'Use at most 500 characters.';
+  if (!description) errors.description = 'Deskripsi wajib diisi.';
+  else if (description.length < 10) errors.description = 'Gunakan minimal 10 karakter.';
+  else if (description.length > 500) errors.description = 'Gunakan maksimal 500 karakter.';
 
   if (!isValidOptionalUrl(values.imageUrl.trim()))
-    errors.imageUrl = 'Enter a valid http(s) image URL.';
-  if (values.brand.trim().length > 40) errors.brand = 'Use at most 40 characters.';
+    errors.imageUrl = 'Masukkan URL gambar http(s) yang valid.';
+  if (values.brand.trim().length > 40) errors.brand = 'Gunakan maksimal 40 karakter.';
 
   if (values.stock.trim()) {
     const stock = Number(values.stock);
     if (!Number.isInteger(stock) || stock < 0)
-      errors.stock = 'Enter a whole number of 0 or more.';
+      errors.stock = 'Masukkan bilangan bulat 0 atau lebih.';
   }
 
   return errors;

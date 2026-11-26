@@ -1,21 +1,22 @@
 import { AddProductForm } from '../components/forms/AddProductForm';
+import { Icon } from '../components/common/Icon';
+import { PageHeader } from '../components/layout/PageHeader';
 
 export function AddProductPage() {
   return (
     <div className="page page--narrow">
-      <section className="page-heading">
-        <p className="eyebrow">Local form</p>
-        <h1>Add a product</h1>
-        <p>
-          Fill in the form to create a product on this device. Inputs are validated before it is
-          added.
-        </p>
-      </section>
+      <PageHeader
+        badge="Form Lokal"
+        title="Tambah produk"
+        description="Isi formulir untuk membuat produk di perangkat ini. Setiap input akan divalidasi sebelum disimpan."
+      />
 
       <aside className="info-panel">
-        <strong>Local only.</strong> This product is saved in localStorage, appears in the Local
-        section of the catalog, and can be favorited. It is never submitted to DummyJSON or any
-        other server.
+        <strong>
+          <Icon name="info" size={15} /> Hanya lokal.
+        </strong>{' '}
+        Produk disimpan di localStorage, tampil di bagian Produk Lokal pada katalog, dan dapat
+        difavoritkan. Data ini tidak pernah dikirim ke DummyJSON maupun server lainnya.
       </aside>
 
       <AddProductForm />

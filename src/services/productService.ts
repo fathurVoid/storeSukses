@@ -90,11 +90,12 @@ function handleRequestError(error: unknown, fallback: string): never {
 
   if (error instanceof AxiosError) {
     const status = error.response?.status;
-    if (status === 404) throw new ApiRequestError('Product not found.', 404);
-    if (status) throw new ApiRequestError(`${fallback} (server returned ${status}).`, status);
+    if (status === 404) throw new ApiRequestError('Produk tidak ditemukan.', 404);
+    if (status)
+      throw new ApiRequestError(`${fallback} (server mengembalikan status ${status}).`, status);
     if (error.code === 'ECONNABORTED')
-      throw new ApiRequestError('The request timed out. Please try again.');
-    throw new ApiRequestError('Network error. Check your connection and try again.');
+      throw new ApiRequestError('Permintaan habis waktu. Silakan coba lagi.');
+    throw new ApiRequestError('Gagal terhubung ke jaringan. Periksa koneksi Anda lalu coba lagi.');
   }
 
   throw new ApiRequestError(fallback);
@@ -122,7 +123,7 @@ export async function getProducts(
         params: { q: query.q, limit: 0, select: SELECT_FIELDS },
       });
       if (!isRawList(response.data))
-        throw new ApiRequestError('Unexpected response from the product API.');
+        throw new ApiRequestError('Respons tidak sesuai dari API produk.');
 
       const matched = response.data.products
         .map(normalizeProduct)
@@ -136,7 +137,7 @@ export async function getProducts(
         limit,
       };
     } catch (error) {
-      handleRequestError(error, 'Could not search products.');
+      handleRequestError(error, 'Gagal mencari produk.');
     }
   }
 
@@ -156,7 +157,7 @@ export async function getProducts(
   try {
     const response = await api.get(endpoint, { signal, params });
     if (!isRawList(response.data))
-      throw new ApiRequestError('Unexpected response from the product API.');
+      throw new ApiRequestError('Respons tidak sesuai dari API produk.');
 
     return {
       products: response.data.products.map(normalizeProduct),
@@ -165,7 +166,7 @@ export async function getProducts(
       limit,
     };
   } catch (error) {
-    handleRequestError(error, 'Could not load products.');
+    handleRequestError(error, 'Gagal memuat produk.');
   }
 }
 
@@ -176,10 +177,10 @@ export async function getProductDetail(
   try {
     const response = await api.get(`/products/${encodeURIComponent(productId)}`, { signal });
     if (!isRawProduct(response.data))
-      throw new ApiRequestError('Unexpected product response from the API.');
+      throw new ApiRequestError('Respons produk tidak sesuai dari API.');
     return normalizeProduct(response.data);
   } catch (error) {
-    handleRequestError(error, 'Could not load this product.');
+    handleRequestError(error, 'Gagal memuat produk ini.');
   }
 }
 
@@ -188,7 +189,7 @@ export async function getCategories(signal?: AbortSignal): Promise<Category[]> {
     const response = await api.get('/products/categories', { signal });
     const data: unknown = response.data;
 
-    if (!Array.isArray(data)) throw new ApiRequestError('Unexpected category response.');
+    if (!Array.isArray(data)) throw new ApiRequestError('Respons kategori tidak sesuai.');
 
     return data
       .filter(
@@ -197,6 +198,6 @@ export async function getCategories(signal?: AbortSignal): Promise<Category[]> {
       )
       .map((item) => ({ slug: item.slug, name: item.name, url: String(item.url ?? '') }));
   } catch (error) {
-    handleRequestError(error, 'Could not load categories.');
+    handleRequestError(error, 'Gagal memuat kategori.');
   }
 }

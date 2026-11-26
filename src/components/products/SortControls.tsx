@@ -10,27 +10,27 @@ export function SortControls({ sortBy, order, onChange }: SortControlsProps) {
   return (
     <div className="sort-controls">
       <div className="filter-field">
-        <label htmlFor="sort-by">Sort by</label>
+        <label htmlFor="sort-by">Urutkan</label>
         <select
           id="sort-by"
           value={sortBy}
           onChange={(event) => onChange(event.target.value as SortBy, order)}
         >
-          <option value="">Featured</option>
-          <option value="price">Price</option>
-          <option value="title">Title</option>
+          <option value="">Unggulan</option>
+          <option value="price">Harga</option>
+          <option value="title">Nama</option>
         </select>
       </div>
       <div className="filter-field">
-        <label htmlFor="sort-order">Order</label>
+        <label htmlFor="sort-order">Arah</label>
         <select
           id="sort-order"
           value={order}
           disabled={!sortBy}
           onChange={(event) => onChange(sortBy, event.target.value as SortOrder)}
         >
-          <option value="asc">Ascending</option>
-          <option value="desc">Descending</option>
+          <option value="asc">Menaik</option>
+          <option value="desc">Menurun</option>
         </select>
       </div>
     </div>

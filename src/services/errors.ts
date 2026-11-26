@@ -13,9 +13,10 @@ export class ApiRequestError extends Error {
 export function toErrorMessage(error: unknown): string {
   if (error instanceof ApiRequestError) return error.message;
   if (error instanceof AxiosError) {
-    if (error.response) return `The server returned ${error.response.status}. Please try again.`;
-    if (error.code === 'ECONNABORTED') return 'The request timed out. Please try again.';
-    return 'Network error. Check your connection and try again.';
+    if (error.response)
+      return `Server mengembalikan status ${error.response.status}. Silakan coba lagi.`;
+    if (error.code === 'ECONNABORTED') return 'Permintaan habis waktu. Silakan coba lagi.';
+    return 'Gagal terhubung ke jaringan. Periksa koneksi Anda lalu coba lagi.';
   }
-  return 'Something went wrong while loading data.';
+  return 'Terjadi kesalahan saat memuat data.';
 }

@@ -1,3 +1,5 @@
+import { Icon } from '../common/Icon';
+
 interface PaginationProps {
   page: number;
   totalPages: number;
@@ -20,9 +22,10 @@ export function Pagination({ page, totalPages, total, limit, onPageChange }: Pag
   const lastItem = Math.min(page * limit, total);
 
   return (
-    <nav className="pagination" aria-label="Pagination">
+    <nav className="pagination" aria-label="Navigasi halaman">
       <p className="pagination__summary">
-        Showing <strong>{firstItem}</strong>–<strong>{lastItem}</strong> of <strong>{total}</strong>
+        Menampilkan <strong>{firstItem}</strong>–<strong>{lastItem}</strong> dari{' '}
+        <strong>{total}</strong>
       </p>
       <div className="pagination__controls">
         <button
@@ -31,7 +34,8 @@ export function Pagination({ page, totalPages, total, limit, onPageChange }: Pag
           onClick={() => onPageChange(page - 1)}
           disabled={page <= 1}
         >
-          ← Previous
+          <Icon name="chevron-left" size={15} />
+          Sebelumnya
         </button>
         {getVisiblePages(page, totalPages).map((pageNumber) => (
           <button
@@ -40,7 +44,7 @@ export function Pagination({ page, totalPages, total, limit, onPageChange }: Pag
             className={`pagination__page${pageNumber === page ? ' is-current' : ''}`}
             onClick={() => onPageChange(pageNumber)}
             aria-current={pageNumber === page ? 'page' : undefined}
-            aria-label={`Page ${pageNumber}`}
+            aria-label={`Halaman ${pageNumber}`}
           >
             {pageNumber}
           </button>
@@ -51,7 +55,8 @@ export function Pagination({ page, totalPages, total, limit, onPageChange }: Pag
           onClick={() => onPageChange(page + 1)}
           disabled={page >= totalPages}
         >
-          Next →
+          Berikutnya
+          <Icon name="chevron-right" size={15} />
         </button>
       </div>
     </nav>

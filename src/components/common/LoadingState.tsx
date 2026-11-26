@@ -2,7 +2,7 @@ interface LoadingStateProps {
   label?: string;
 }
 
-export function LoadingState({ label = 'Loading products…' }: LoadingStateProps) {
+export function LoadingState({ label = 'Memuat produk…' }: LoadingStateProps) {
   return (
     <div className="state-card" role="status" aria-live="polite">
       <span className="spinner" aria-hidden="true" />

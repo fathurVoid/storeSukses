@@ -1,16 +1,21 @@
 import { useEffect, useState } from 'react';
-import { useNavigationType, useSearchParams } from 'react-router-dom';
+import { Link, useNavigationType, useSearchParams } from 'react-router-dom';
 import { EmptyState } from '../components/common/EmptyState';
 import { ErrorState } from '../components/common/ErrorState';
+import { Icon } from '../components/common/Icon';
 import { LoadingState } from '../components/common/LoadingState';
+import { PageHeader } from '../components/layout/PageHeader';
 import { CategoryFilter } from '../components/products/CategoryFilter';
 import { LocalProductsSection } from '../components/products/LocalProductsSection';
 import { Pagination } from '../components/products/Pagination';
 import { ProductGrid } from '../components/products/ProductGrid';
 import { SearchBar } from '../components/products/SearchBar';
 import { SortControls } from '../components/products/SortControls';
+import { StatCards } from '../components/products/StatCards';
+import { useSavedProducts } from '../context/SavedProductsContext';
 import { useCategories } from '../hooks/useCategories';
 import { useDebounce } from '../hooks/useDebounce';
+import { useLocalProducts } from '../hooks/useLocalProducts';
 import { useProducts } from '../hooks/useProducts';
 import type { ProductQuery, SortBy, SortOrder } from '../types/product';
 
@@ -41,6 +46,8 @@ export function ProductsPage() {
   const debouncedSearch = useDebounce(searchInput.trim(), 350);
 
   const { categories } = useCategories();
+  const { savedProducts } = useSavedProducts();
+  const { products: localProducts, removeProduct: removeLocalProduct } = useLocalProducts();
   const { products, total, loading, error, refetch } = useProducts(query);
   const totalPages = Math.max(1, Math.ceil(total / query.limit));
 
@@ -126,16 +133,31 @@ export function ProductsPage() {
 
   return (
     <div className="page">
-      <section className="hero">
-        <p className="eyebrow">Pertemuan 8 · React Catalog</p>
-        <h1>Explore the product catalog</h1>
-        <p>
-          Search, filter, sort and save products. External items come from DummyJSON; anything you
-          add yourself stays on this device.
-        </p>
-      </section>
+      <PageHeader
+        badge="Katalog Produk"
+        title="Jelajahi katalog produk"
+        description="Cari, filter, urutkan, dan simpan produk. Data eksternal berasal dari DummyJSON, sedangkan produk yang Anda tambahkan tetap tersimpan di perangkat ini."
+        action={
+          <Link className="button button--primary" to="/products/new">
+            <Icon name="plus" size={16} />
+            Tambah produk
+          </Link>
+        }
+      />
 
-      <section className="controls-panel" aria-label="Catalog controls">
+      <StatCards
+        total={total}
+        categories={categories.length}
+        saved={savedProducts.length}
+        local={localProducts.length}
+      />
+
+      <section className="controls-panel glass-card" aria-label="Kontrol katalog">
+        <div className="controls-panel__head">
+          <Icon name="filter" size={18} />
+          Filter &amp; pencarian
+        </div>
+
         <SearchBar value={searchInput} onChange={setSearchInput} />
 
         <div className="controls-panel__row">
@@ -146,7 +168,7 @@ export function ProductsPage() {
           />
           <SortControls sortBy={query.sortBy} order={query.order} onChange={handleSort} />
           <div className="filter-field">
-            <label htmlFor="page-size">Per page</label>
+            <label htmlFor="page-size">Per halaman</label>
             <select
               id="page-size"
               value={query.limit}
@@ -160,14 +182,15 @@ export function ProductsPage() {
             </select>
           </div>
           <button type="button" className="button button--ghost" onClick={handleClearAll}>
-            Reset
+            <Icon name="close" size={15} />
+            Atur ulang
           </button>
         </div>
       </section>
 
       <div className="results-heading">
-        <h2>Products</h2>
-        {!loading && !error && <span className="results-count">{total} results</span>}
+        <h2>Produk</h2>
+        {!loading && !error && <span className="results-count">{total} hasil</span>}
       </div>
 
       {loading ? (
@@ -176,11 +199,12 @@ export function ProductsPage() {
         <ErrorState message={error} onRetry={refetch} />
       ) : products.length === 0 ? (
         <EmptyState
-          title="No products found"
-          message="Try a different keyword or category, or reset the filters."
+          title="Produk tidak ditemukan"
+          message="Coba kata kunci atau kategori lain, atau atur ulang filter yang digunakan."
+          icon="search"
           action={
             <button type="button" className="button button--ghost" onClick={handleClearAll}>
-              Clear filters
+              Hapus filter
             </button>
           }
         />
@@ -197,7 +221,7 @@ export function ProductsPage() {
         </>
       )}
 
-      <LocalProductsSection />
+      <LocalProductsSection products={localProducts} onRemove={removeLocalProduct} />
     </div>
   );
 }

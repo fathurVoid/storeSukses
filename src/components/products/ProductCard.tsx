@@ -11,7 +11,7 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <article className="product-card">
-      <Link to={detailUrl} className="product-card__media" aria-label={`View ${product.title}`}>
+      <Link to={detailUrl} className="product-card__media" aria-label={`Lihat ${product.title}`}>
         <ProductImage product={product} className="product-card__image" />
       </Link>
 
@@ -25,7 +25,7 @@ export function ProductCard({ product }: { product: Product }) {
           <Link to={detailUrl}>{product.title}</Link>
         </h3>
         <p className="product-card__description">
-          {truncate(product.description || 'No description available.')}
+          {truncate(product.description || 'Deskripsi tidak tersedia.')}
         </p>
 
         <div className="product-card__footer">

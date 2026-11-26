@@ -23,7 +23,7 @@ export function useProductDetail(productId: string | undefined): UseProductDetai
     setProduct(null);
 
     if (!productId) {
-      setError('Invalid product ID.');
+      setError('ID produk tidak valid.');
       setLoading(false);
       return () => controller.abort();
     }
@@ -36,7 +36,7 @@ export function useProductDetail(productId: string | undefined): UseProductDetai
     }
 
     if (productId.startsWith('local-')) {
-      setError('This locally added product is no longer available on this device.');
+      setError('Produk lokal ini sudah tidak tersedia di perangkat ini.');
       setLoading(false);
       return () => controller.abort();
     }

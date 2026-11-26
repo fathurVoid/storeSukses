@@ -21,7 +21,7 @@ npm run preview   # preview hasil build
 | OD-03 | Produk lokal tampil di bagian terpisah di `/products`, tidak dicampur ke pagination API |
 | OD-04 | Favorit dapat berisi produk API **dan** produk lokal |
 | OD-05 | 12 produk per halaman (opsi: 12 / 24 / 30) |
-| OD-08 | Dark charcoal + aksen emerald (design tokens di `src/styles/tokens.css`) |
+| OD-08 | Black/white glassmorphism selaras dengan UI/UX `campusTask` (design tokens di `src/styles/tokens.css`) |
 
 OD-06 (integrasi portfolio), OD-07 (nama repo/domain), dan deployment ditunda sampai tahap deployment.
 
@@ -38,12 +38,13 @@ Semua halaman memakai satu root layout melalui nested route (`RootLayout` + `<Ou
 | `/saved` | `SavedProductsPage` |
 | `*` | `NotFoundPage` |
 
-Navigasi memakai `BrowserRouter`, `Link`, `NavLink`, dan `Navigate` (tanpa full-page reload).
+Navigasi memakai `BrowserRouter`, `Link`, `NavLink`, dan `Navigate` (tanpa full-page reload). Layout desktop memakai `Sidebar`, sementara layar mobile memakai `MobileNav` berupa bottom navigation.
 
 ## State management
 
 - **Local state** — `useState` untuk input pencarian sementara, kontrol form, dan error validasi.
 - **Global state** — `SavedProductsContext` + `useSavedProducts`; favorit dipersisten ke `localStorage` (`storeSukses:savedProducts:v1`).
+- **Toast state** — `ToastProvider` + `useToast` untuk feedback aksi (simpan, hapus, validasi).
 - **Server state** — `useProducts`, `useProductDetail`, `useCategories` (Axios + `AbortController`, loading/error/empty handling).
 - **URL state** — `useSearchParams` untuk `q`, `category`, `sortBy`, `order`, `page`, `limit`.
 - **Form state** — controlled components + `validateProductForm`.
@@ -57,7 +58,7 @@ Layer API terpisah dari UI:
 
 - `src/services/api.ts` — Axios instance (`baseURL`, timeout).
 - `src/services/productService.ts` — daftar produk, detail, kategori.
-- `src/services/errors.ts` — tipe error dan pesan ramah pengguna.
+- `src/services/errors.ts` — tipe error dan pesan ramah pengguna (Bahasa Indonesia).
 - `src/services/localProductService.ts` — produk lokal (localStorage, bukan API).
 
 Endpoint DummyJSON yang dipakai:
@@ -84,20 +85,32 @@ Produk lokal tidak pernah dikirim ke server eksternal dan diberi ID berprefix `l
 | `useDebounce` | Menunda update URL saat pengguna mengetik pencarian |
 | `useLocalProducts` | Membaca/menulis/menghapus produk lokal di localStorage |
 
+## UI/UX
+
+Mengikuti pola `campusTask` memakai CSS custom saja (tanpa Tailwind/component library):
+
+- Background hitam murni, teks putih, aksesoris netral abu-abu, dan permukaan kaca `rgba(255,255,255,0.05)` dengan blur 12px.
+- Sidebar desktop + bottom navigation mobile, status pill berdenyut, dan kartu statistik ringkas.
+- Tombol primer putih dengan teks hitam, focus ring putih 2px, radius 12–24px, animasi `fadeIn`/`scaleIn`, serta scrollbar hitam tipis.
+- Toast notifikasi untuk feedback aksi dan dialog konfirmasi kustom menggantikan `window.confirm`.
+- Seluruh copy antarmuka dan pesan error menggunakan Bahasa Indonesia.
+
 ## Struktur folder
 
 ```text
 src/
 ├── assets/
 ├── components/
-│   ├── common/     LoadingState, ErrorState, EmptyState, RatingBadge, SourceBadge, SaveButton, ProductImage
-│   ├── layout/     RootLayout, Navbar, Footer
-│   ├── products/   SearchBar, CategoryFilter, SortControls, Pagination, ProductCard, ProductGrid, LocalProductsSection
+│   ├── common/     Icon, LoadingState, ErrorState, EmptyState, RatingBadge,
+│   │               SourceBadge, SaveButton, ProductImage, ConfirmDialog
+│   ├── layout/     RootLayout, Sidebar, MobileNav, PageHeader
+│   ├── products/   SearchBar, CategoryFilter, SortControls, Pagination, ProductCard,
+│   │               ProductGrid, StatCards, LocalProductsSection
 │   └── forms/      FormField, AddProductForm
 ├── pages/          ProductsPage, ProductDetailPage, SavedProductsPage, AddProductPage, NotFoundPage
 ├── hooks/          useProducts, useProductDetail, useCategories, useDebounce, useLocalProducts
 ├── services/       api, productService, localProductService, errors
-├── context/        SavedProductsContext
+├── context/        SavedProductsContext, ToastContext
 ├── types/          product.ts
 ├── routes/         AppRoutes.tsx
 ├── utils/          format, validation, storage, sort

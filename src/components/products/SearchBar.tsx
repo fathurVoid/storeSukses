@@ -1,3 +1,5 @@
+import { Icon } from '../common/Icon';
+
 interface SearchBarProps {
   value: string;
   onChange: (value: string) => void;
@@ -6,17 +8,15 @@ interface SearchBarProps {
 export function SearchBar({ value, onChange }: SearchBarProps) {
   return (
     <div className="search-bar">
-      <label htmlFor="product-search">Search</label>
+      <label htmlFor="product-search">Cari produk</label>
       <div className="search-bar__control">
-        <span className="search-bar__icon" aria-hidden="true">
-          ⌕
-        </span>
+        <Icon name="search" size={18} className="search-bar__icon" />
         <input
           id="product-search"
           type="search"
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          placeholder="Try “phone” or “chair”"
+          placeholder='Coba "phone" atau "chair"'
           autoComplete="off"
         />
         {value && (
@@ -24,9 +24,9 @@ export function SearchBar({ value, onChange }: SearchBarProps) {
             type="button"
             className="search-bar__clear"
             onClick={() => onChange('')}
-            aria-label="Clear search"
+            aria-label="Hapus pencarian"
           >
-            ×
+            <Icon name="close" size={16} />
           </button>
         )}
       </div>

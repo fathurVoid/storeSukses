@@ -1,18 +1,25 @@
 import { Outlet } from 'react-router-dom';
-import { Footer } from './Footer';
-import { Navbar } from './Navbar';
+import { MobileNav } from './MobileNav';
+import { Sidebar } from './Sidebar';
 
 export function RootLayout() {
   return (
     <div className="app-shell">
       <a className="skip-link" href="#main-content">
-        Skip to content
+        Lewati ke konten
       </a>
-      <Navbar />
-      <main id="main-content" className="container main-content">
-        <Outlet />
+      <div className="sidebar-slot">
+        <Sidebar />
+      </div>
+      <main id="main-content" className="main-content">
+        <div className="main-inner">
+          <Outlet />
+          <p className="app-footer">
+            storeSukses &copy; {new Date().getFullYear()} &middot; Dibangun dengan React &amp; TypeScript
+          </p>
+        </div>
       </main>
-      <Footer />
+      <MobileNav />
     </div>
   );
 }

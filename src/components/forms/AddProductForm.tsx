@@ -1,9 +1,11 @@
 import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
+import { useToast } from '../../context/ToastContext';
 import { useCategories } from '../../hooks/useCategories';
 import { useLocalProducts } from '../../hooks/useLocalProducts';
 import type { ProductFormErrors, ProductFormValues } from '../../types/product';
 import { validateProductForm } from '../../utils/validation';
+import { Icon } from '../common/Icon';
 import { FormField } from './FormField';
 
 const EMPTY_VALUES: ProductFormValues = {
@@ -22,6 +24,7 @@ export function AddProductForm() {
   const [success, setSuccess] = useState<string | null>(null);
   const { categories } = useCategories();
   const { addProduct } = useLocalProducts();
+  const { notify } = useToast();
 
   function update(field: keyof ProductFormValues, value: string) {
     setValues((current) => ({ ...current, [field]: value }));
@@ -33,7 +36,11 @@ export function AddProductForm() {
     event.preventDefault();
     const nextErrors = validateProductForm(values);
     setErrors(nextErrors);
-    if (Object.keys(nextErrors).length > 0) return;
+
+    if (Object.keys(nextErrors).length > 0) {
+      notify('Periksa kembali kolom yang ditandai.', 'error');
+      return;
+    }
 
     const product = addProduct({
       title: values.title,
@@ -45,7 +52,8 @@ export function AddProductForm() {
       stock: values.stock ? Number(values.stock) : undefined,
     });
 
-    setSuccess(`“${product.title}” was added to your local products.`);
+    setSuccess(`“${product.title}” ditambahkan ke produk lokal Anda.`);
+    notify(`“${product.title}” berhasil disimpan di perangkat ini.`, 'success');
     setValues(EMPTY_VALUES);
   }
 
@@ -54,46 +62,46 @@ export function AddProductForm() {
       {success && (
         <div className="form-success" role="status">
           <div>
-            <strong>Success!</strong> {success}
+            <strong>Berhasil!</strong> {success}
           </div>
           <div className="form-success__actions">
-            <Link to="/products">View local products</Link>
+            <Link to="/products">Lihat produk lokal</Link>
             <button type="button" className="link-button" onClick={() => setSuccess(null)}>
-              Dismiss
+              Tutup
             </button>
           </div>
         </div>
       )}
 
       <div className="form-grid">
-        <FormField label="Title" htmlFor="title" error={errors.title}>
+        <FormField label="Nama produk" htmlFor="title" error={errors.title}>
           <input
             id="title"
             type="text"
             value={values.title}
             onChange={(event) => update('title', event.target.value)}
-            placeholder="e.g. Ergonomic Desk Chair"
+            placeholder="Contoh: Kursi Kerja Ergonomis"
             aria-invalid={Boolean(errors.title)}
           />
         </FormField>
 
-        <FormField label="Price (USD)" htmlFor="price" error={errors.price}>
+        <FormField label="Harga (USD)" htmlFor="price" error={errors.price}>
           <input
             id="price"
             type="text"
             inputMode="decimal"
             value={values.price}
             onChange={(event) => update('price', event.target.value)}
-            placeholder="e.g. 149.99"
+            placeholder="Contoh: 149.99"
             aria-invalid={Boolean(errors.price)}
           />
         </FormField>
 
         <FormField
-          label="Category"
+          label="Kategori"
           htmlFor="category"
           error={errors.category}
-          hint="Pick a known category or type your own."
+          hint="Pilih kategori yang tersedia atau ketik sendiri."
         >
           <input
             id="category"
@@ -101,7 +109,7 @@ export function AddProductForm() {
             list="known-categories"
             value={values.category}
             onChange={(event) => update('category', event.target.value)}
-            placeholder="e.g. furniture"
+            placeholder="Contoh: furniture"
             aria-invalid={Boolean(errors.category)}
           />
           <datalist id="known-categories">
@@ -113,34 +121,34 @@ export function AddProductForm() {
           </datalist>
         </FormField>
 
-        <FormField label="Brand (optional)" htmlFor="brand" error={errors.brand}>
+        <FormField label="Merek (opsional)" htmlFor="brand" error={errors.brand}>
           <input
             id="brand"
             type="text"
             value={values.brand}
             onChange={(event) => update('brand', event.target.value)}
-            placeholder="e.g. Northline"
+            placeholder="Contoh: Northline"
             aria-invalid={Boolean(errors.brand)}
           />
         </FormField>
 
-        <FormField label="Stock (optional)" htmlFor="stock" error={errors.stock}>
+        <FormField label="Stok (opsional)" htmlFor="stock" error={errors.stock}>
           <input
             id="stock"
             type="text"
             inputMode="numeric"
             value={values.stock}
             onChange={(event) => update('stock', event.target.value)}
-            placeholder="e.g. 12"
+            placeholder="Contoh: 12"
             aria-invalid={Boolean(errors.stock)}
           />
         </FormField>
 
         <FormField
-          label="Image URL (optional)"
+          label="URL Gambar (opsional)"
           htmlFor="imageUrl"
           error={errors.imageUrl}
-          hint="Leave blank to show an initials placeholder."
+          hint="Kosongkan untuk menampilkan inisial produk."
         >
           <input
             id="imageUrl"
@@ -154,17 +162,17 @@ export function AddProductForm() {
 
         <div className="form-field form-field--full">
           <FormField
-            label="Description"
+            label="Deskripsi"
             htmlFor="description"
             error={errors.description}
-            hint="Between 10 and 500 characters."
+            hint="Antara 10 sampai 500 karakter."
           >
             <textarea
               id="description"
               rows={4}
               value={values.description}
               onChange={(event) => update('description', event.target.value)}
-              placeholder="Describe the product in a sentence or two."
+              placeholder="Jelaskan produk dalam satu atau dua kalimat."
               aria-invalid={Boolean(errors.description)}
             />
           </FormField>
@@ -173,7 +181,8 @@ export function AddProductForm() {
 
       <div className="form-actions">
         <button type="submit" className="button button--primary">
-          Add local product
+          <Icon name="plus" size={16} />
+          Tambah produk lokal
         </button>
         <button
           type="button"
@@ -184,7 +193,8 @@ export function AddProductForm() {
             setSuccess(null);
           }}
         >
-          Reset form
+          <Icon name="close" size={16} />
+          Kosongkan form
         </button>
       </div>
     </form>
