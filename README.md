@@ -107,14 +107,3 @@ src/
 ```
 
 Folder wajib dosen (`components`, `pages`, `hooks`, `services`, `context`) tersedia. Komponen reusable yang dipakai berulang: `ProductCard`, `ProductGrid`, `SaveButton`, `ProductImage`, `SearchBar`, `CategoryFilter`, `Pagination`, `LoadingState`, `ErrorState`, `EmptyState`.
-
-## Verifikasi manual
-
-- [ ] Routing, nested route, dynamic route, redirect, 404
-- [ ] Listing, detail, pencarian, filter kategori, sorting, pagination
-- [ ] Perubahan search/filter mengembalikan halaman ke 1
-- [ ] Context API + persistensi favorit setelah refresh
-- [ ] Form validasi + feedback sukses, produk lokal muncul di bagian Local
-- [ ] Loading / error / empty state (termasuk ID tidak ditemukan)
-- [ ] Responsive desktop/tablet/mobile
-- [ ] `npm run build` berhasil
