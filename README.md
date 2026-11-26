@@ -105,5 +105,3 @@ src/
 ├── App.tsx
 └── main.tsx
 ```
-
-Folder wajib dosen (`components`, `pages`, `hooks`, `services`, `context`) tersedia. Komponen reusable yang dipakai berulang: `ProductCard`, `ProductGrid`, `SaveButton`, `ProductImage`, `SearchBar`, `CategoryFilter`, `Pagination`, `LoadingState`, `ErrorState`, `EmptyState`.
